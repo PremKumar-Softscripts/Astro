@@ -24,18 +24,23 @@ const initialPosts = await getPosts();
 
   <script>
     async function fetchPosts() {
-      const response = await fetch('https://dev-git-test-site007.pantheonsite.io/wp-json/wp/v2/posts');
-      const posts = await response.json();
-      const postList = document.getElementById('post-list');
-      postList.innerHTML = posts.map(post => `
-        <li>
-          <h2>${post.title.rendered}</h2>
-          <p>${post.excerpt.rendered}</p>
-        </li>
-      `).join('');
+      try {
+        const response = await fetch('/api/posts'); // Use a dynamic API route
+        const posts = await response.json();
+        const postList = document.getElementById('post-list');
+        postList.innerHTML = posts.map(post => `
+          <li>
+            <h2>${post.title.rendered}</h2>
+            <p>${post.excerpt.rendered}</p>
+          </li>
+        `).join('');
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
     }
 
-    setInterval(fetchPosts, 1000); // Refresh posts every 5 seconds
+    fetchPosts(); // Fetch new posts on page load
+    setInterval(fetchPosts, 5000); // Refresh posts every 5 seconds
   </script>
 </body>
 </html>
